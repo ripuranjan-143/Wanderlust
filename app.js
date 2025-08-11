@@ -1,9 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const Listing = require('./models/listing');
 const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
+const ExpressError = require('./utils/ExpressError');
+const session = require('express-session');
+const flash = require('connect-flash');
+
+const listings = require('./routes/listing');
+const reviews = require('./routes/review');
 
 const app = express();
 
@@ -26,63 +31,55 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, '/public')));
 app.engine('ejs', ejsMate);
 
-app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride('_method'));
+const sessionOptions = {
+  secret: 'mysupersecretcode',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  },
+};
 
 app.get('/', (req, res) => {
   res.send('Hi, I am groot...');
 });
 
-// Index Route
-app.get('/listings', async (req, res) => {
-  let allListings = await Listing.find({});
-  //console.log(allListings)
-  res.render('listings/index.ejs', { allListings });
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  next();
 });
 
-// New Route
-app.get('/listings/new', async (req, res) => {
-  res.render('listings/new.ejs');
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
+
+app.use('/listings', listings);
+app.use('/listings/:id/reviews', reviews);
+
+app.all('*', (req, res, next) => {
+  next(
+    new ExpressError(
+      404,
+      '404 - Page Not Found Sorry, The page you are looking for does not exist.'
+    )
+  );
 });
 
-// Edit Route
-app.get('/listings/:id/edit', async (req, res) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id);
-  res.render('listings/edit.ejs', { listing });
+app.use((err, req, res, next) => {
+  let { statusCode = 500, message = 'Something Went Wrong!' } = err;
+  res.status(statusCode).render('error.ejs', { message });
 });
 
-// Show Route
-app.get('/listings/:id', async (req, res) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id);
-  // console.log(listing)
-  res.render('listings/show.ejs', { listing });
+const PORT = 8080;
+app.listen(PORT, () => {
+  console.log('Server running at http://localhost:8080...');
 });
 
-// Create Route
-app.post('/listings', async (req, res) => {
-  // why /listings not something else =
-  // POST /listings says: “I’m sending data to create a new listing in the /listings collection.”
-  const newListing = new Listing(req.body.listing);
-  await newListing.save();
-  res.redirect('/listings');
-});
-
-// Update Route
-app.put('/listings/:id', async (req, res) => {
-  let { id } = req.params;
-  await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-  res.redirect(`/listings/${id}`);
-});
-
-// Delete Route
-app.delete('/listings/:id', async (req, res) => {
-  let { id } = req.params;
-  const deletedListing = await Listing.findByIdAndDelete(id);
-  console.log(deletedListing);
-  res.redirect('/listings');
-});
 // app.get('/testlisting', async(req, res) => {
 //   let samplelisting = new Listing({
 //     title: 'My new villa',
@@ -95,8 +92,3 @@ app.delete('/listings/:id', async (req, res) => {
 //   console.log('sample was saved');
 //   res.send('successful testing')
 // });
-
-const PORT = 8080;
-app.listen(PORT, () => {
-  console.log('Server running at http://localhost:3000...');
-});

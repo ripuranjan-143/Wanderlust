@@ -1,26 +1,81 @@
 <% layout('layouts/boilerplate') %>
-<body>
-  <h3>Create a new Listing</h3>
-  <form method="get" action="/listings">
-    <button>All Listings</button>
-  </form>
-  <br />
-  <form method="post" action="/listings">
-    <input name="listing[title]" placeholder="enter title" type="text" />
-    <br /><br />
-    <textarea
-      name="listing[description]"
-      placeholder="enter description"
-    ></textarea>
-    <br /><br />
-    <input name="listing[image]" placeholder="enter URL/Link" type="text" />
-    <br /><br />
-    <input name="listing[price]" placeholder="enter price" type="number" />
-    <br /><br />
-    <input name="listing[location]" placeholder="enter location" type="text" />
-    <br /><br />
-    <input name="listing[country]" placeholder="enter country" type="text" />
-    <br /><br />
-    <button>Add</button>
-  </form>
-</body>
+<div class="row">
+  <div class="col-8 mx-auto">
+    <h3>Create a new Listing</h3>
+    <br />
+    <form method="post" action="/listings" novalidate class="needs-validation">
+      <div class="mb-4">
+        <label for="title" class="form-label">Title</label>
+        <input
+          name="listing[title]"
+          placeholder="Enter a catchy title for your listing"
+          type="text"
+          class="form-control"
+          id="title"
+          required
+        />
+        <div class="invalid-feedback">Enter a valid title.</div>
+      </div>
+      <div class="mb-4">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          name="listing[description]"
+          placeholder="Describe your place, its features, and vibe"
+          class="form-control"
+          id="description"
+          required
+        ></textarea>
+        <div class="invalid-feedback">Enter a valid description.</div>
+      </div>
+      <div class="mb-4">
+        <label for="image" class="form-label">Image URL</label>
+        <input
+          name="listing[image]"
+          placeholder="Paste a valid image URL here"
+          type="text"
+          class="form-control"
+          id="image"
+        />
+      </div>
+      <div class="row">
+        <div class="mb-4 col-md-4">
+          <label for="price" class="form-label">Price</label>
+          <input
+            name="listing[price]"
+            placeholder="Ex.- ₹1200"
+            class="form-control"
+          
+            id="price"
+            required
+          />
+          <div class="invalid-feedback">Enter price.</div>
+        </div>
+        <div class="mb-4 col-md-8">
+          <label for="country" class="form-label">Country</label>
+          <input
+            name="listing[country]"
+            placeholder="Enter the country your place is located in"
+            type="text"
+            class="form-control"
+            id="country"
+            required
+          />
+          <div class="invalid-feedback">Enter a country name.</div>
+        </div>
+      </div>
+      <div class="mb-5">
+        <label for="location" class="form-label">Location</label>
+        <input
+          name="listing[location]"
+          placeholder="Enter the specific city or area"
+          type="text"
+          class="form-control"
+          id="location"
+          required
+        />
+        <div class="invalid-feedback">Enter a valid location.</div>
+      </div>
+      <button class="btn add-btn btn-edit">Add</button>
+    </form>
+  </div>
+</div>
