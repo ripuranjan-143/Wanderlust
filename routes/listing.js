@@ -3,11 +3,20 @@ const router = express.Router();
 const wrapAsync = require('../utils/wrapAsync');
 const { isLoggedIn, isOwner, validateListing } = require('../middleware');
 const listingControler = require('../controllers/listings');
+const multer = require('multer');
+const { storage } = require('../cloudConfig');
+const upload = multer({ storage });
 
 router
   .route('/')
   .get(wrapAsync(listingControler.index))
-  .post(isLoggedIn, validateListing, wrapAsync(listingControler.createListing));
+  .post(
+    isLoggedIn,
+    
+    upload.single('listing[image]'),
+    validateListing,
+    wrapAsync(listingControler.createListing)
+  );
 
 // New Route
 router.get('/new', isLoggedIn, listingControler.renderNewForm);
