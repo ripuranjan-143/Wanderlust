@@ -7,7 +7,7 @@ const listingSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  description:  {
+  description: {
     type: String,
     required: true,
   },
@@ -20,15 +20,15 @@ const listingSchema = new mongoose.Schema({
         ? 'https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fG9vYXy'
         : v,
   },
-  price:  {
+  price: {
     type: Number,
     required: true,
   },
-  location:  {
+  location: {
     type: String,
     required: true,
   },
-  country:  {
+  country: {
     type: String,
     required: true,
   },
@@ -38,6 +38,10 @@ const listingSchema = new mongoose.Schema({
       ref: 'Review',
     },
   ],
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
 });
 
 listingSchema.post('findOneAndDelete', async (listing) => {

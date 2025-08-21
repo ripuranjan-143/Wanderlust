@@ -1,0 +1,39 @@
+<% layout("/layouts/boilerplate")%>
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <!-- Title -->
+    <div class="col-12 text-center mb-4">
+      <h4>Login for Wanderlust</h4>
+    </div>
+
+    <!-- Form -->
+    <div class="col-8 col-sm-7 col-md-5">
+      <form action="/login" method="post" novalidate class="needs-validation">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input
+            name="username"
+            id="username"
+            type="text"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input
+            name="password"
+            id="password"
+            type="password"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <button class="btn btn-success w-100">Login</button>
+      </form>
+    </div>
+  </div>
+</div>
