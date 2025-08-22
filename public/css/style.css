@@ -127,3 +127,8 @@ body {
   margin-right: 30px;
 }
 
+/* Map */
+#map {
+  width: 92vh;
+  height: 350px; 
+}

@@ -1,11 +1,14 @@
 <% layout('/layouts/boilerplate') %>
 
+<script>
+  const mapToken = '<%= process.env.MAP_TOKEN %>';
+  const listing = <%- JSON.stringify(listing) %>;
+</script>
+
 <!-- Listing Details -->
 <div class="row justify-content-center">
   <div class="col-12 col-md-9 col-lg-6">
-    <h3 class="mb-2 listing-title mx-auto">
-      <%= listing.title %>
-    </h3>
+    <h3 class="mb-2 listing-title mx-auto"><%= listing.title %></h3>
     <div class="card listing-card mx-auto">
       <img
         src="<%= listing.image.url %>"
@@ -30,7 +33,7 @@
 <% if (currUser && currUser._id.equals(listing.owner._id)) { %>
 <div class="row justify-content-center mt-3">
   <div class="col-12 col-md-9 col-lg-6">
-    <div class="mx-auto" >
+    <div class="mx-auto">
       <form
         method="get"
         action="/listings/<%=listing._id%>/edit"
@@ -62,9 +65,8 @@
         novalidate
         class="needs-validation"
       >
-      <label for="rating" class="form-label">Rating</label>
+        <label for="rating" class="form-label">Rating</label>
         <fieldset class="starability-slot">
-          
           <input
             type="radio"
             id="no-rate"
@@ -167,3 +169,10 @@
   </div>
 </div>
 <% } %>
+
+<div class="col-8 offset-3 mb-3">
+  <h3>Where you'll be</h3>
+  <div id="map"></div>
+</div>
+
+<script src="/js/map.js"></script>
